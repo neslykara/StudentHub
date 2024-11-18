@@ -1,5 +1,7 @@
 package studentGradSystem;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class StudentGradSystem
@@ -7,8 +9,9 @@ public class StudentGradSystem
     public static void main(String[] args)
     {
 
-        start();
+        CourseService courseService = new CourseService();
 
+        start();
 
     }
 
@@ -16,7 +19,12 @@ public class StudentGradSystem
         Scanner scan = new Scanner(System.in);
         int select;
 
+
         CourseService courseService = new CourseService();
+
+        StudentService studentService = new StudentService( courseService);  // StudentService örneği oluşturuluyor
+        Teacher loggedTeacher = null;  // Giriş yapan öğretmeni takip etmek için
+
         do {
         System.out.println("===ATATURK ORTAOKULU===");
         System.out.println("1-Idareci giris");
@@ -28,21 +36,23 @@ public class StudentGradSystem
 
         if(select==1){
             int idariSelect;
-
             System.out.println("1-Ogretmen ekleme");
-            System.out.println("2-Sınıf ekleme");
-            System.out.println("3-Ogrenci ekleme");
+          // System.out.println("2-Sınıf ekleme");
+          // System.out.println("3-Ogrenci ekleme");
             idariSelect = scan.nextInt();
             scan.nextLine();
 
+            //Listeye ogretmen ekleme
             if (idariSelect==1){
                 courseService.addTeacher("adSoyad", "ders");
                 courseService.printTeacher();
-
-
             }
         } else if (select==2)
         {
+           loggedTeacher = courseService.teacherLogin();
+           if (loggedTeacher != null){
+               studentService.addBulkExamNote(loggedTeacher);
+           }
 
 
         } else if (select==3) {
@@ -55,4 +65,5 @@ public class StudentGradSystem
     }while (select != 0 );
 
     }
+
 }
